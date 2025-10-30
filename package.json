@@ -17,6 +17,7 @@
     "@google/generative-ai": "^0.24.1",
     "@langchain/core": "^0.3.78",
     "@langchain/google-genai": "^0.2.18",
+    "axios": "^1.13.1",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "file-type": "^16.5.4",
