@@ -1,10 +1,10 @@
 import { Router } from "express";
-import multer from "multer";
-import { chatController } from "../controllers/chatControllers";
+import { chatController, summarizeNewsController } from "../controllers/chatControllers";
 
 const router = Router();
 
 
 router.post("/chat", chatController);
+router.post("/summarize", summarizeNewsController);
 
 export default router;
