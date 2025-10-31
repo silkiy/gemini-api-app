@@ -1,11 +1,20 @@
 import express, { Request, Response } from "express";
 import webRouter from "./routers/index";
 import { parse } from "url";
+import cors from "cors";
 
 const app = express();
 const PORT = 3000;
 
 app.use(express.json());
+
+app.use(
+    cors({
+        origin: ["http://localhost:3000", "https://gist-ai.vercel.app"],
+        methods: ["GET", "POST", "OPTIONS"],
+        allowedHeaders: ["Content-Type"],
+    })
+)
 
 app.use("/api", webRouter);
 
