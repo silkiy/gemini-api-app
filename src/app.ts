@@ -10,7 +10,19 @@ app.use(express.json());
 
 app.use(
     cors({
-        origin: ["http://localhost:3000", "https://gist-ai.vercel.app"],
+        origin: (origin, callback) => {
+            if (!origin) return callback(null, true);
+
+            if (
+                origin.startsWith("chrome-extension://") ||
+                origin.startsWith("http://localhost") ||
+                origin === "https://gist-ai.vercel.app"
+            ) {
+                return callback(null, true);
+            }
+
+            return callback(new Error("CORS not allowed for this origin"));
+        },
         methods: ["GET", "POST", "OPTIONS"],
         allowedHeaders: ["Content-Type"],
     })
