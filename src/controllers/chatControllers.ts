@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import axios from "axios";
 import { geminiModel } from "../config/gemini";
+import fs from "fs";
 
 const isRelatedToNews = (question: string) => {
     const keywords = [
@@ -111,6 +112,55 @@ export const summarizeNewsController = async (req: Request, res: Response) => {
         res.status(500).json({
             status: "error",
             message: "Failed to summarize news",
+        });
+    }
+};
+
+export const analyzeImageController = async (req: Request, res: Response) => {
+    if (!req.file) {
+        return res.status(400).json({
+            status: "error",
+            message: "No image uploaded",
+        });
+    }
+
+    try {
+        const imageBuffer = fs.readFileSync(req.file.path);
+        const imageBase64 = imageBuffer.toString("base64");
+        const mimeType = req.file.mimetype;
+
+        const prompt = "Analisis gambar berikut dan jelaskan isinya secara singkat dalam bahasa Indonesia.";
+
+        const result = await geminiModel.invoke([
+            {
+                role: "user",
+                content: [
+                    { type: "text", text: prompt },
+                    {
+                        type: "image_url",
+                        image_url: `data:${mimeType};base64,${imageBase64}`,
+                    },
+                ],
+            },
+        ]);
+
+        let analysisText = "";
+        if (typeof result === "string") analysisText = result;
+        else if (result && typeof result === "object" && "text" in result)
+            analysisText = (result as { text: string }).text;
+        else analysisText = "Model tidak memberikan respon yang valid.";
+
+        fs.unlinkSync(req.file.path);
+
+        res.json({
+            status: "success",
+            analysis: analysisText,
+        });
+    } catch (error) {
+        console.error("Error in analyzeImageController:", error);
+        res.status(500).json({
+            status: "error",
+            message: "Failed to analyze image",
         });
     }
 };

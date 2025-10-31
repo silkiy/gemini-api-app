@@ -1,10 +1,12 @@
 import { Router } from "express";
-import { chatController, summarizeNewsController } from "../controllers/chatControllers";
+import { chatController, summarizeNewsController, analyzeImageController } from "../controllers/chatControllers";
+import multer from "multer";
 
 const router = Router();
-
+const upload = multer({ dest: "uploads/" });
 
 router.post("/chat", chatController);
 router.post("/summarize", summarizeNewsController);
+router.post("/analyze-image", upload.single("image"), analyzeImageController);
 
 export default router;

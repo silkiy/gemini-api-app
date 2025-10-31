@@ -14,7 +14,9 @@ app.use(
         methods: ["GET", "POST", "OPTIONS"],
         allowedHeaders: ["Content-Type"],
     })
-)
+);
+
+app.use(express.json({ limit: "20mb" }));
 
 app.use("/api", webRouter);
 
