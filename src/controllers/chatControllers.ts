@@ -125,8 +125,7 @@ export const analyzeImageController = async (req: Request, res: Response) => {
     }
 
     try {
-        const imageBuffer = fs.readFileSync(req.file.path);
-        const imageBase64 = imageBuffer.toString("base64");
+        const imageBase64 = req.file.buffer.toString("base64");
         const mimeType = req.file.mimetype;
 
         const prompt = "Analisis gambar berikut dan jelaskan isinya secara singkat dalam bahasa Indonesia.";
@@ -149,8 +148,6 @@ export const analyzeImageController = async (req: Request, res: Response) => {
         else if (result && typeof result === "object" && "text" in result)
             analysisText = (result as { text: string }).text;
         else analysisText = "Model tidak memberikan respon yang valid.";
-
-        fs.unlinkSync(req.file.path);
 
         res.json({
             status: "success",

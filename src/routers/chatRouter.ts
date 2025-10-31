@@ -3,7 +3,7 @@ import { chatController, summarizeNewsController, analyzeImageController } from 
 import multer from "multer";
 
 const router = Router();
-const upload = multer({ dest: "uploads/" });
+const upload = multer({ storage: multer.memoryStorage() });
 
 router.post("/chat", chatController);
 router.post("/summarize", summarizeNewsController);
